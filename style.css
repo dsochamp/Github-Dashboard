@@ -3,17 +3,17 @@
 /* Liquid Glass Code */
 
 :root,:host{ 
-    --glass-frost: 0.1;
+    --glass-frost: 0.5;
     --glass-saturation: 1.2;
     --filter-id: url(#glass-filter-_r_b_);
 }
 
 body {
     
-    background: url('bg.jpeg') center / cover;
+    background: url('bg2.jpg') center / cover;
 }
 
-.liquidglass, div{
+.liquidglass, .containerdiv{
     z-index: 1;
     offset-path: var(--glass-frost);
     background: hsl(0 0% 0% / var(--glass-frost, 0));
