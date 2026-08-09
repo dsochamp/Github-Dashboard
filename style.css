@@ -8,31 +8,49 @@
     --filter-id: url(#glass-filter-_r_b_);
 }
 
-body {
-    
-    background: url('bg.jpeg') center / cover;
 
-}
-
-.liquidglass, .containerdiv{
+.liquidglass, .containerdiv, button{
     z-index: 1;
     offset-path: var(--glass-frost);
-    background: hsl(0 0% 0% / var(--glass-frost, 0));
+    background: rgba(70 130 180 / var(--glass-frost, 0));
     -webkit-backdrop-filter: var(--filter-id,url(#glass-filter))saturate(var(--glass-saturation,1));
     backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1));
     box-shadow: inset 0 0 2px 1px #ffffff59, inset 0 0 10px 4px #ffffff26, inset 0 4px 16px #11111a0d, inset 0 8px 24px #11111a0d, inset 0 6px 56px #11111a0d;
     box-shadow: inset 0 0 2px 1px lab(100% 0 0 / .35), inset 0 0 10px 4px lab(100% 0 0 / .15), inset 0 4px 16px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 8px 24px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 6px 56px lab(5.32203% 1.61424 -5.88284 / .0509804);
     border-radius: calc(16px * var(--brm));
+    transition: border-radius 0.5s;
     corner-shape: squircle;
-    
     padding: 25px;
     color: whitesmoke;
 }
 
-script {
-    border-radius: calc(16px * var(--brm));
-    corner-shape: squircle;
+button {
+  z-index: 1;
+  offset-path: var(--glass-frost);
+  background: rgba(70 130 180 / var(--glass-frost, 0));
+  -webkit-backdrop-filter: var(--filter-id,url(#glass-filter))saturate(var(--glass-saturation,1));
+  backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1));
+  box-shadow: inset 0 0 2px 1px #ffffff59, inset 0 0 10px 4px #ffffff26, inset 0 4px 16px #11111a0d, inset 0 8px 24px #11111a0d, inset 0 6px 56px #11111a0d;
+  box-shadow: inset 0 0 2px 1px lab(100% 0 0 / .35), inset 0 0 10px 4px lab(100% 0 0 / .15), inset 0 4px 16px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 8px 24px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 6px 56px lab(5.32203% 1.61424 -5.88284 / .0509804);
+  border-radius: calc(8px * var(--brm));
+  transition: border-radius 1s;
+  corner-shape: squircle;
+  padding: 25px;
+  color: whitesmoke;
 }
+
+.containerdiv:hover, .liquidglass:hover{
+  border-radius: calc(32px * var(--brm));
+  corner-shape: squircle;
+}
+
+button:hover {
+  border-radius: calc(50px * var(--brm));
+  corner-shape: squircle;
+  box-shadow: inset 0 0 2px 1px #ffffff59, inset 0 0 10px 4px #ffffff26, inset 0 4px 16px #11111a0d, inset 0 8px 24px #11111a0d, inset 0 6px 56px #11111a0d;
+  box-shadow: inset 0 0 2px 1px lab(100% 0 0 / .35), inset 0 0 15px 5px lab(100% 0 0 / .15), inset 0 6px 22px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 8px 24px lab(5.32203% 1.61424 -5.88284 / .0509804), inset 0 6px 56px lab(5.32203% 1.61424 -5.88284 / .0509804);
+}
+
 
 /* Squircle Corner Code */
 
@@ -49,16 +67,16 @@ script {
 /* Regular */
 
 body {
-    background-color: rgb(41, 41, 41);
+    background-color: rgb(12, 51, 111);
+    color:aliceblue;
 }
-
 
 
 h1, h2, h3, h4 {
   font-family: 'Teachers', sans-serif;
 }
 
-p {
+p, button {
   font-family: 'Elms Sans', sans-serif;
 }
 
@@ -71,3 +89,4 @@ section {
 #section1 div {
   height: 300px;
 }
+
