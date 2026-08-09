@@ -1,8 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- THE GREAT LINKING -->
         <link rel="stylesheet" href="style.css">
-        <script type="text/javascript">
+        <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+       
+       <!-- All Javascript logic -->
+       
+        
+    </head>
+    <body>
+        
+        <div class="containerdiv" style="align-items: center; display: grid; grid-template-columns: 0px 1fr 5fr; column-gap: 50px;">
+            <div></div>
+            <div style="align-content: center;">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrNQEr1BtPseqNiD50__K2MIGPmqUF0jAwKXJ_NTDiw&s" style="width: 150px; height: 150px; border-radius: 9999px;">
+            </div>
+            <div>
+                <h1>Your Github Dashboard</h1>
+                <p>View all your stats, projects and more!</p>
+            </div>
+        </div>
+        <br><br>
+        <div id='infocard' class="containerdiv" style="display: grid; grid-template-columns: 2fr 1fr 2fr; align-items: center; column-gap: 50px;"></div>
+        <br><br>
+        <section id="section1">
+            <div class="containerdiv" id="chartContainer">
+                <script type="text/javascript">
         window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainer",
             {
@@ -33,25 +57,60 @@
             chart.render();
         }
         </script>
-        <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-
-    </head>
-    <body>
-        
-        
-        <div class="containerdiv">
-            <h1>Your Github Dashboard</h1>
-            <p>View all your stats, projects and more!</p>
-        </div>
-        <br><br>
-        <section id="section1">
-            <div class="containerdiv" id="chartContainer"></div>
-            <div class="containerdiv">
+            </div>
+            <div class="containerdiv" >
 
             </div>
             <div class="containerdiv">
 
             </div>
         </section>
+        <div id="infocard"></div>
+
+        <script>
+        async function getGitHubUser() {
+            const infocard = document.getElementById('infocard');
+
+            const username = "catppuccin";
+
+            const response = await fetch(
+                `https://api.github.com/users/${username}`
+            );
+
+            const user = await response.json();
+
+
+            infocard.innerHTML = `
+                <div style='display: flex; justify-content: center; align-items: center;  width:100%; height:100%; '>
+                    <br>
+                    <img src='${user.avatar_url}' style='width:75%; border-radius:9999px;'>    
+                </div>
+                <div>
+                    <a href='${user.html_url}' target='_blank' style='color:white; text-decoration:none;'><h1>${user.name} / @${user.login}</h1></a>
+                    <p>${user.bio}</p>
+                    <hr>
+                    <div style='display:grid; grid-template-columns: 200px 100px 150px 200px;'>
+                        <p>Public Repositories: ${user.public_repos}</p>
+                        <p>Gists: ${user.public_gists}</p>
+                        <p>Followers: ${user.followers}</p>
+                        <p>Following: ${user.following}</p>
+                    </div>
+                    
+                </div>
+                <div style='border-radius: calc(16px * var(--brm)); corner-shape: squircle; border: 5px solid #ffffff59; padding:25px;'>
+                    <p><strong>Contact:</strong> ${user.email ? user.email !== 'null' : 'N/A'}</p>
+                    <p><strong>Company:</strong> ${user.company ? user.company !== 'null': 'N/A'}</p>
+                    <p><strong>Hireable:</strong> ${user.hireable ? user.hireable !== 'null' : 'N/A'}</p>
+                </div>
+                <div></div>
+                <div style='display:grid; column-gap:10px; grid-template-columns: 1fr 1fr;'>
+                    <p><em>Created At: ${user.created_at}</em></p>
+                    <p><em>Last Updated: ${user.updated_at}</em></p>
+                </div>
+            `;
+        }
+
+        getGitHubUser();
+        </script>
     </body>
 </html>
