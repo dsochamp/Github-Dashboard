@@ -1,11 +1,1 @@
-repo.id
-repo.node_id
-repo.name
-repo.full_name
-repo.private
-repo.fork
-repo.html_url
-repo.url
-repo.description
-repo.visibility
-repo.default_branch
+dsochamp

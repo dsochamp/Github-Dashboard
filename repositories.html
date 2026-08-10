@@ -22,11 +22,15 @@
         <br><br>
 
         <div class='containerdiv' id='repos' style='display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 25px; row-gap: 25px;'>
-            
+        
         </div>
 
         <script>
-            const username = 'catppuccin';
+            fetch("username.txt")
+            .then(response => response.text())
+            .then(data => {
+                const username = data;
+            });
 
             async function getGitCards() {
 

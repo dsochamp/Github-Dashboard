@@ -38,7 +38,11 @@
 
         <script>
         
-        const username = 'catppuccin';
+        fetch("Github_Dashboard/username.txt")
+        .then(response => response.text())
+        .then(data => {
+            let username = data;
+        });
         
         async function getGitHubUser() {
             const infocard = document.getElementById('infocard');
