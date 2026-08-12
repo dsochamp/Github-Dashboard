@@ -21,16 +21,11 @@
         </div>
         <br><br>
 
-        <div class='containerdiv' id='repos' style='display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 25px; row-gap: 25px;'>
-        
-        </div>
+        <div class='containerdiv' id='repos' style='display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 25px; row-gap: 25px;'></div>
 
         <script>
-            fetch("username.txt")
-            .then(response => response.text())
-            .then(data => {
-                const username = data;
-            });
+
+            const username = localStorage.getItem("username");
 
             async function getGitCards() {
 
@@ -64,7 +59,12 @@
             });
 
             document.getElementById('avatarimg').src = repos[0].owner.avatar_url;
-        }
+            }
+
+            async function getRepoInfo(repo_clicked){
+                
+            }
+
         getGitCards();
         </script>
     </body>

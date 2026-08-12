@@ -10,45 +10,77 @@
         
     </head>
     <body>
-        
-        <div class="containerdiv" style="align-items: center; display: grid; grid-template-columns: 0px 1fr 5fr; column-gap: 50px;">
-            <div></div>
-            <div style="align-content: center;">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrNQEr1BtPseqNiD50__K2MIGPmqUF0jAwKXJ_NTDiw&s" style="width: 150px; height: 150px; border-radius: 9999px;">
-            </div>
-            <div>
-                <h1>Your Github Dashboard</h1>
-                <p>View all your stats, projects and more!</p>
-            </div>
+        <div id='enterusername' style='opacity: 0; display:none; grid-template-columns:5fr 3fr; height: 65px; column-gap: 15px;'>
+            <input id='usernameinput' style='font-size:25px; border-radius: calc(100px * var(--brm)); corner-shape: squircle;' placeholder=' Type in your username here...'>
+            <button onclick='changeusername()' style='font-size:25px; font-family: "Teachers", sans-serif;'>Set username</button>
         </div>
 
-        <br><br>
+        <div id='main'>
+            <div class="containerdiv" style="align-items: center; display: grid; grid-template-columns: 0px 1fr 5fr 1fr; column-gap: 50px;">
+                <div></div>
+                <div style="align-content: center;">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrNQEr1BtPseqNiD50__K2MIGPmqUF0jAwKXJ_NTDiw&s" style="width: 150px; height: 150px; border-radius: 9999px;">
+                </div>
+                <div>
+                    <h1>Your Github Dashboard</h1>
+                    <p>View all your stats, projects and more!</p>
+                </div>
+            </div>
 
-        <div id='infocard' class="containerdiv" style="display: grid; grid-template-columns: 1fr 1fr 2fr; align-items: center; column-gap: 50px;"></div>
+            <br><br>
+
+            <div id='infocard' class="containerdiv" style="display: grid; grid-template-columns: 1fr 1fr 2fr; align-items: center; column-gap: 50px;"></div>
+            
+            <br><br>
+
+            <section id='section1' style='display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; column-gap: 20px;'>
+                <a class='containerdiv' href='repositories.html' style='border-style: none !important; text-decoration: none;  padding: 10px !important;'><p style='text-align: center; font-family: "Elms Sans", sans-serif; font-size: 17px;'>Repositories &#8594</p></a>
+            </section>
+
+            <br><br>
+
+            <footer>
+                <button onclick='resetpage()' style='font-size:10px; padding: 5px; border: 0px white none;'>  Click this to reset your username  </button>
+            </footer>
+        </div>
         
-        <br><br>
-
-        <section id='section1' style='display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; column-gap: 20px;'>
-            <a class='containerdiv' href='repositories.html' style='border-style: none !important; text-decoration: none;  padding: 10px !important;'><p style='text-align: center; font-family: "Elms Sans", sans-serif; font-size: 17px;'>Repositories &#8594</p></a>
-        </section>
-
-        <br><br>
 
         <!-- Javascript Logic -->
 
         <script>
+        const username = localStorage.getItem("username") || 'none';
+
+        if (username === 'none') {
+            document.getElementById('main').style.opacity = 0;
+            document.getElementById('enterusername').style.opacity = 1;
+            document.getElementById('enterusername').style.display = 'grid';
+        } else {
+            getGitHubUser(username);     
+        }
+
+        function changeusername() {
+            const usernameinput = document.getElementById('usernameinput').value;
+
+            if (document.getElementById('usernameinput').value != '') {
+                localStorage.setItem("username", usernameinput)
+            }
+
+            document.getElementById('main').style.opacity = 1;
+            document.getElementById('enterusername').style.opacity = 0;
+
+            getGitHubUser(localStorage.getItem('username'));
+        }
         
-        fetch("Github_Dashboard/username.txt")
-        .then(response => response.text())
-        .then(data => {
-            let username = data;
-        });
-        
-        async function getGitHubUser() {
+        function resetpage() {
+            localStorage.clear()
+            location.reload()
+        }
+    
+        async function getGitHubUser(user_name) {
             const infocard = document.getElementById('infocard');
 
             const response = await fetch(
-                `https://api.github.com/users/${username}`
+                `https://api.github.com/users/${user_name}`
             );
 
             const user = await response.json();
@@ -82,40 +114,7 @@
                     <p><em>Last Updated: ${user.updated_at}</em></p>
                 </div>
             `;
-        }
-
-        getGitHubUser();        
-        </script>
-
-        <script type="text/javascript">
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("chartContainer",
-            {
-                title:{
-                    text: ""
-                },
-                legend: {
-                    itemWidth: 100
-                },
-                data: [
-                {
-                    type: "pie",
-                    showInLegend: true,
-                    legendText: "{indexLabel}",
-                    dataPoints: [
-                        { y: 4181563, indexLabel: "PlayStation 3" },
-                        { y: 2175498, indexLabel: "Wii" },
-                        { y: 3125844, indexLabel: "Xbox 360" },
-                        { y: 1176121, indexLabel: "Nintendo DS"},
-                        { y: 1727161, indexLabel: "PSP" },
-                        { y: 4303364, indexLabel: "Nintendo 3DS"},
-                        { y: 1717786, indexLabel: "PS Vita"}
-                    ]
-                }
-                ]
-            });
-            chart.render();
-        }
+        }   
         </script>
     </body>
 </html>

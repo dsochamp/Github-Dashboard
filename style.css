@@ -76,7 +76,7 @@ h1, h2, h3, h4 {
   font-family: 'Teachers', sans-serif;
 }
 
-p, button {
+p, button, label, input {
   font-family: 'Elms Sans', sans-serif;
 }
 
@@ -89,4 +89,3 @@ section {
 #section1 div {
   height: 300px;
 }
-
