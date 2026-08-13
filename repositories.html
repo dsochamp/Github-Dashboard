@@ -4,14 +4,14 @@
         <link rel='stylesheet' href='style.css'>
         <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     </head>
-    <body>
+    <body onload='getGitCards()'>
         <section id='section1' style='display: grid; grid-template-columns: 75px; column-gap: 20px;'>
             <a class='containerdiv' href='index.html' style='padding: 10px !important; border-style: none !important; text-decoration: none; '><p style='text-align: center; font-family: "Elms Sans", sans-serif; font-size: 11px;'>&#8592 Back</p></a>
         </section>
         <br>
         <div class='containerdiv' style='display: grid; grid-template-columns: 25px 4fr 1fr; '>
             <div></div>
-            <div style='display: flex grid; align-items: center;'><br>
+            <div style='align-items: center;'><br>
             <h1>My Repositories </h1>
             <p>Have a look at your repositories and look deeper</p>
             </div>
@@ -22,7 +22,7 @@
         <br><br>
 
         <div class='containerdiv' id='repos' style='display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 25px; row-gap: 25px;'></div>
-
+        <div class='containerdiv' id='reposanalytics' style='opacity: 0;'></div>
         <script>
 
             const username = localStorage.getItem("username");
@@ -35,16 +35,15 @@
 
             const repos = await response.json();
 
-
             repos.forEach(repo => {
 
                 const card = document.createElement('div');
 
                 card.innerHTML = `
                 <div class='containerdiv'>
-                    <div style='display:grid; grid-template-columns:1fr 1fr;'>
+                    <div style='display:grid; grid-template-columns:2fr 1fr; column-gap:13px;'>
                         <h2>${repo.name}</h2>
-                        <p style='font-size: 15px; text-align:right;'>Explore More &#8594</p>
+                        <button style='font-size: 15px; border:0px white none; padding:2px !important;' onclick='getRepoInfo("${repo.name}")'>Check Out &#8594</button>
                     </div>
                     <p>${repo.description || "No description"}</p>
 
@@ -61,11 +60,149 @@
             document.getElementById('avatarimg').src = repos[0].owner.avatar_url;
             }
 
-            async function getRepoInfo(repo_clicked){
-                
+            function timeDiff(time) {
+                const now = new Date();
+                const timethen = new Date(time);
+                const diffindays = (now - timethen) / 1000 / 60 / 60 / 24;
+
+                if (diffindays < 1) {
+                    return `${Math.floor((now - timethen) / 1000 / 60 / 60)} hours ago`;
+                } else if (diffindays < 365) {
+                    return `${Math.floor((now - timethen) / 1000 / 60 / 60 / 24)} days ago`;
+                } else {
+                    return `${Math.floor((now - timethen) / 1000 / 60 / 60 / 24 / 365)} years ago`;
+                }
             }
 
-        getGitCards();
+            async function getRepoInfo(repo_clicked){
+                const username = localStorage.getItem("username");
+
+                document.getElementById('repos').style.opacity = 0;
+                document.getElementById('repos').style.display = 'none';
+
+                const reposanalyser = document.getElementById('reposanalytics');
+                reposanalyser.style.opacity = 1;
+
+
+                // Get Main Repo Info
+
+                const response = await fetch(
+                    `https://api.github.com/users/${username}/repos`
+                );
+
+                const repos = await response.json();
+
+                const index = Object.values(repos).map(repo => repo.name).indexOf(repo_clicked);
+
+                const repoclicked = repo_clicked;
+
+                // Get Commit Info
+
+                const commitresponse = await fetch(
+                    `https://api.github.com/repos/${username}/${repo_clicked}/commits`
+                );
+
+                const commits = await commitresponse.json();
+
+                const languages = await fetch(
+                    `${repos[index].languages_url}`
+                );
+
+                const languagesdata = await languages.json();
+
+                let allcommits = `<ul>`;
+
+                for (let i = 0; i < commits.length; i++) {
+                    allcommits += `<li>${commits[i].commit.message}</li>`;
+                }
+                allcommits += `</ul>`;
+
+                // Languages sorting
+
+                const langlistnum = Object.values(languagesdata);
+
+                const total = Object.values(languagesdata).reduce((sum, value) => sum + value, 0);
+
+                const result = Object.entries(languagesdata).map(([label, value]) => ({
+                    y: Number(((value / total) * 100).toFixed(2)),
+                    label: label
+                }));
+
+
+                reposanalyser.innerHTML = `
+                <h1>${repoclicked} <span style='font-size:14px; align-items:center; background-color:green; border: 1px green solid; padding:2px;'>${repos[index].private ? 'Private' : 'Public'}</span></h1>
+                <p>${repos[index].description || 'No description'}</p>
+                <div class='containerdiv' style='display:grid; grid-template-columns:100px 100px 100px 220px 250px; font-size:15px; align-items:center;'>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/stars.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].stargazers_count}</p></div>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/watchers.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].watchers}</p></div>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/forks.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].forks_count}</p></div>
+                    <div><p><strong>Created:</strong> ${timeDiff(repos[index].created_at)}</p></div>
+                    <div><p><strong>Last Pushed At:</strong> ${timeDiff(repos[index].pushed_at)}</p></div>
+                </div>
+                <br><br>
+                <div style='display:grid; grid-template-columns: 2fr 1fr; column-gap:35px;'>
+                    <div style='display:grid; grid-template-columns:1fr 1fr; column-gap:35px;' class='containerdiv'>
+                        <div>
+                            <h3>Repository Details</h3>    
+                            <div style='display:grid; grid-template-columns:1fr 1fr; column-gap:15px;'>
+                                <div style='display:grid; grid-template-columns:1fr;'>
+                                    <div id='chartContainer'></div>
+                                </div>
+                                <div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class='containerdiv' style='display:grid; grid-template-columns:1fr;>
+                        <div class='containerdiv' style='height=600px'>
+                            <h3>Recent Commits:</h3>
+                            <p>${allcommits}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+                // Charts
+                createlanguagepi(result)
+            }
+        </script>
+        <script>
+
+            async function createlanguagepi(languages) {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+            theme: "light2",
+            animationEnabled: true,
+            title: {
+                text: "Shares of Electricity Generation by Fuel"
+            },
+            subtitles: [{
+                text: "United Kingdom, 2016",
+                fontSize: 16
+            }],
+            data: [{
+                type: "pie",
+                indexLabelFontSize: 18,
+                radius: 80,
+                indexLabel: "{label} - {y}",
+                yValueFormatString: "###0.0\"%\"",
+                click: explodePie,
+                dataPoints: [languages]
+            }]
+        });
+        chart.render();
+
+        function explodePie(e) {
+            for(var i = 0; i < e.dataSeries.dataPoints.length; i++) {
+                if(i !== e.dataPointIndex)
+                    e.dataSeries.dataPoints[i].exploded = false;
+            }
+        }
+            chart.render();
+
+            }
         </script>
     </body>
 </html>
