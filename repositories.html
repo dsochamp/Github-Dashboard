@@ -5,8 +5,9 @@
         <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     </head>
     <body onload='getGitCards()'>
-        <section id='section1' style='display: grid; grid-template-columns: 75px; column-gap: 20px;'>
+        <section id='section1' style='display: grid; grid-template-columns: 75px 150px; column-gap: 20px;'>
             <a class='containerdiv' href='index.html' style='padding: 10px !important; border-style: none !important; text-decoration: none; '><p style='text-align: center; font-family: "Elms Sans", sans-serif; font-size: 11px;'>&#8592 Back</p></a>
+            <button class='containerdiv' onclick='showall()' style='padding: 10px !important; border-style: none !important; text-decoration: none; '><p style='text-align: center; font-family: "Elms Sans", sans-serif; font-size: 11px;'>View All Repositories</p></button>
         </section>
         <br>
         <div class='containerdiv' style='display: grid; grid-template-columns: 25px 4fr 1fr; '>
@@ -82,6 +83,7 @@
 
                 const reposanalyser = document.getElementById('reposanalytics');
                 reposanalyser.style.opacity = 1;
+                reposanalyser.style.display = 'grid';
 
 
                 // Get Main Repo Info
@@ -102,7 +104,7 @@
                     `https://api.github.com/repos/${username}/${repo_clicked}/commits`
                 );
 
-                const commits = await commitresponse.json();
+                let commits = await commitresponse.json();
 
                 // Get Languages Info
 
@@ -127,6 +129,7 @@
                 for (let i = 0; i < commits.length; i++) {
                     allcommits += `<li>${commits[i].commit.author.name} - ${commits[i].commit.message}</li>`;
                 }
+
                 allcommits += `</ul>`;
 
                 // Events Sorting
@@ -180,19 +183,30 @@
                     </div>
                     <div class='containerdiv' style='display:grid;>
                         <div class='containerdiv'>
-                            <h4>Recent Activity:</h4>
-                            <p>${allevents}</p>
+                            <h3>Recent Activity:</h3>
+                            <p>${allevents || 'There is no activity for this repository'}</p>
                         </div>
                     </div>
                 </div><br><br>
-                <div class='containerdiv'>
-                    <h4>Recent Commits:</h4>
-                    <p>${allcommits|| 'No Commits have been done to this repository yet'}</p>
+                <div style='display:grid; grid-template-columns:1fr 1fr;'>
+                    <div class='containerdiv'>
+                        <h3>Recent Commits:</h3>
+                        <p style='display:grid; grid-template-columns:1fr 1fr;'><ul>${allcommits || 'No Commits have been done to this repository yet'}</ul></p>
+                    </div>
                 </div>
                 `;
 
                 // Charts
                 createlanguagepi(result)
+            }
+
+            function showall() {
+                document.getElementById('repos').style.opacity = 1;
+                document.getElementById('repos').style.display = 'grid';
+
+                const reposanalyser = document.getElementById('reposanalytics');
+                reposanalyser.style.opacity = 0;
+                document.getElementById('reposanalytics').style.display = 'none';
             }
         </script>
         <script>
