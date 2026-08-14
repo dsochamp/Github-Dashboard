@@ -48,9 +48,9 @@
                     <p>${repo.description || "No description"}</p>
 
                     <p>Language (Majority): ${repo.language || "Unknown"}</p>
-                    <p>Stargazers: ${repo.stargazers_count}</p>
-                    <p>Forks: ${repo.forks_count}</p>
-                    <p>Issues: ${repo.open_issues_count}</p>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/stars.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repo.stargazers_count}</p></div>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/watchers.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repo.watchers}</p></div>
+                    <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/forks.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repo.forks_count}</p></div>
                 </div>
                 `;
 
@@ -104,18 +104,39 @@
 
                 const commits = await commitresponse.json();
 
+                // Get Languages Info
+
                 const languages = await fetch(
                     `${repos[index].languages_url}`
                 );
 
                 const languagesdata = await languages.json();
 
+                // Get Events Info
+
+                const eventsresponse = await fetch(
+                    `https://api.github.com/repos/${username}/${repo_clicked}/events`
+                );
+
+                const events = await eventsresponse.json();
+
+                // Commits Sorting
+
                 let allcommits = `<ul>`;
 
                 for (let i = 0; i < commits.length; i++) {
-                    allcommits += `<li>${commits[i].commit.message}</li>`;
+                    allcommits += `<li>${commits[i].commit.author.name} - ${commits[i].commit.message}</li>`;
                 }
                 allcommits += `</ul>`;
+
+                // Events Sorting
+
+                let allevents = ``;
+
+                for (let i = 0; i < events.length; i++) {
+                    allevents += ` - A ${events[i].type} was issued by ${events[i].actor.login} around ${timeDiff(events[i].created_at)}`;
+                }
+
 
                 // Languages sorting
 
@@ -129,15 +150,17 @@
                 }));
 
 
+
                 reposanalyser.innerHTML = `
                 <h1>${repoclicked} <span style='font-size:14px; align-items:center; background-color:green; border: 1px green solid; padding:2px;'>${repos[index].private ? 'Private' : 'Public'}</span></h1>
                 <p>${repos[index].description || 'No description'}</p>
-                <div class='containerdiv' style='display:grid; grid-template-columns:100px 100px 100px 220px 250px; font-size:15px; align-items:center;'>
+                <div class='containerdiv' style='display:grid; grid-template-columns:100px 100px 100px 220px 250px 200px; font-size:15px; align-items:center;'>
                     <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/stars.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].stargazers_count}</p></div>
                     <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/watchers.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].watchers}</p></div>
                     <div style='display:grid; grid-template-columns:30px 30px; align-items:center; column-gap:10px;'><img src='Icons/forks.png' style='width:30px; border-radius:16px; corner-shape:squircle;'>  <p>${repos[index].forks_count}</p></div>
                     <div><p><strong>Created:</strong> ${timeDiff(repos[index].created_at)}</p></div>
                     <div><p><strong>Last Pushed At:</strong> ${timeDiff(repos[index].pushed_at)}</p></div>
+                    <div><p><strong>License:</strong> ${repos[index].license?.name || 'No License'}</p></div>
                 </div>
                 <br><br>
                 <div style='display:grid; grid-template-columns: 2fr 1fr; column-gap:35px;'>
@@ -155,12 +178,16 @@
                         </div>
                         <div></div>
                     </div>
-                    <div class='containerdiv' style='display:grid; grid-template-columns:1fr;>
-                        <div class='containerdiv' style='height=600px'>
-                            <h3>Recent Commits:</h3>
-                            <p>${allcommits}</p>
+                    <div class='containerdiv' style='display:grid;>
+                        <div class='containerdiv'>
+                            <h4>Recent Activity:</h4>
+                            <p>${allevents}</p>
                         </div>
                     </div>
+                </div><br><br>
+                <div class='containerdiv'>
+                    <h4>Recent Commits:</h4>
+                    <p>${allcommits|| 'No Commits have been done to this repository yet'}</p>
                 </div>
                 `;
 
@@ -173,23 +200,20 @@
             async function createlanguagepi(languages) {
 
             var chart = new CanvasJS.Chart("chartContainer", {
-            theme: "light2",
             animationEnabled: true,
-            title: {
-                text: "Shares of Electricity Generation by Fuel"
+            title:{
+            text:"Coding Languages Usage",
+            fontFamily: "'Elms Sans', sans-serif",
             },
-            subtitles: [{
-                text: "United Kingdom, 2016",
-                fontSize: 16
-            }],
             data: [{
                 type: "pie",
-                indexLabelFontSize: 18,
+                indexLabelFontSize: 11,
+                indexLabelFontFamily: "'Elms Sans', sans-serif",
                 radius: 80,
                 indexLabel: "{label} - {y}",
                 yValueFormatString: "###0.0\"%\"",
                 click: explodePie,
-                dataPoints: [languages]
+                dataPoints: languages
             }]
         });
         chart.render();
