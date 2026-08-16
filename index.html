@@ -10,6 +10,7 @@
         
     </head>
     <body id='pagecontainer'>
+        <h1 id='apiwarning' style='opacity: 0;'>You ran at out of Github API request limits! Come back in about an hour.</h1>
         <div id='enterusername' style='opacity: 0; display:none; grid-template-columns:5fr 3fr; height: 65px; column-gap: 15px;'>
             <input id='usernameinput' style='font-size:25px; border-radius: calc(100px * var(--brm)); corner-shape: squircle;' placeholder=' Type in your username here...'>
             <button onclick='changeusername()' style='font-size:25px; font-family: "Teachers", sans-serif;'>Set username</button>
@@ -77,6 +78,12 @@
 
             const user = await response.json();
 
+            if (user.name = 'undefined') {
+                document.getElementById('apiwarning').style.opacity = 1;
+                document.getElementById('section1').style.opacity = 0;
+                document.getElementById('section1').style.display = 'none';
+                return;
+            }
 
             infocard.innerHTML = `
                 <div style='display: flex; justify-content: center; align-items: center;'>
