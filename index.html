@@ -39,6 +39,8 @@
         <script>
         const username = localStorage.getItem("username") || 'none';
 
+        // Checks if username is stored in localStorage
+
         if (username === 'none') {
             document.getElementById('main').style.opacity = 0;
             document.getElementById('enterusername').style.opacity = 1;
@@ -47,6 +49,8 @@
             getGitHubUser(username);     
         }
         
+        // Used to change the username of the user
+
         function changeusername() {
             const usernameinput = document.getElementById('usernameinput').value;
 
@@ -60,14 +64,14 @@
             getGitHubUser(localStorage.getItem('username'));
         }
         
+        // Clears localStorage to erase username and reloads page
+
         function resetpage() {
             localStorage.clear()
             location.reload()
         }
     
-        function pagerotateset(rotation) {
-            localStorage.setItem('pagerotation', rotation);
-        }
+        //  Gets Github User information and turns it into an infocard about the user
 
         async function getGitHubUser(user_name) {
             const infocard = document.getElementById('infocard');
@@ -77,6 +81,8 @@
             );
 
             const user = await response.json();
+
+            // Handles when the Github API returns undefined
 
             if (user.name = 'undefined') {
                 document.getElementById('apiwarning').style.opacity = 1;

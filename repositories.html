@@ -28,6 +28,8 @@
 
             const username = localStorage.getItem("username");
 
+            // Used to get the Github Repository information and turn them into individual cards
+
             async function getGitCards() {
 
             const response = await fetch(
@@ -61,6 +63,8 @@
             document.getElementById('avatarimg').src = repos[0].owner.avatar_url;
             }
 
+            // Used to get the difference in time between a date entered and the current time. WARNING TO MUCH MATH
+
             function timeDiff(time) {
                 const now = new Date();
                 const timethen = new Date(time);
@@ -74,6 +78,8 @@
                     return `${Math.floor((now - timethen) / 1000 / 60 / 60 / 24 / 365)} years ago`;
                 }
             }
+
+            // Gets information about specific repositories when the user clicks on one
 
             async function getRepoInfo(repo_clicked){
                 const username = localStorage.getItem("username");
@@ -150,7 +156,7 @@
                     label: label
                 }));
 
-
+                // Stuffs all that information into one MEGA div
 
                 reposanalyser.innerHTML = `
                 <h1>${repoclicked} <span style='font-size:14px; align-items:center; background-color:green; border: 1px green solid; padding:2px;'>${repos[index].private ? 'Private' : 'Public'}</span></h1>
@@ -213,9 +219,12 @@
                 </div>
                 `;
 
-                // Charts
+                // Turns the languages into a pie chart
+
                 createlanguagepi(result)
             }
+
+            // So the user can go back and look at more repositories
 
             function showall() {
                 document.getElementById('repos').style.opacity = 1;
@@ -227,6 +236,8 @@
             }
         </script>
         <script>
+
+            // Creates the pie chart on the languages used in the repository
 
             async function createlanguagepi(languages) {
 
