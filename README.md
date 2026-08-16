@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-A tool that fetches your Github data using the Github API. It takes in your username and saves it into localStorage (you can change it whenever you like).
+A tool that fetches your Github data using the Github API. It takes in your username and saves it into localStorage (you can change it whenever you like). If it returns undefined you ran out of your limit.
 
 ## How-To-Use
 
