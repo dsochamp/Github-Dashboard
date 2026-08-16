@@ -9,7 +9,7 @@
        
         
     </head>
-    <body>
+    <body id='pagecontainer'>
         <div id='enterusername' style='opacity: 0; display:none; grid-template-columns:5fr 3fr; height: 65px; column-gap: 15px;'>
             <input id='usernameinput' style='font-size:25px; border-radius: calc(100px * var(--brm)); corner-shape: squircle;' placeholder=' Type in your username here...'>
             <button onclick='changeusername()' style='font-size:25px; font-family: "Teachers", sans-serif;'>Set username</button>
@@ -26,7 +26,7 @@
 
             <br><br>
 
-            <footer>
+            <footer style='display: grid; grid-template-columns: 200px 190px 60px 60px 60px 60px; column-gap: 25px;'>
                 <button onclick='resetpage()' style='font-size:10px; padding: 5px; border: 0px white none;'>  Click this to reset your username  </button>
             </footer>
         </div>
@@ -45,7 +45,7 @@
         } else {
             getGitHubUser(username);     
         }
-
+        
         function changeusername() {
             const usernameinput = document.getElementById('usernameinput').value;
 
@@ -64,6 +64,10 @@
             location.reload()
         }
     
+        function pagerotateset(rotation) {
+            localStorage.setItem('pagerotation', rotation);
+        }
+
         async function getGitHubUser(user_name) {
             const infocard = document.getElementById('infocard');
 

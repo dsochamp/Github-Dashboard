@@ -67,16 +67,20 @@ button:hover {
 /* Regular */
 
 body {
-    background-color: rgb(12, 51, 111);
-    color:aliceblue;
+  background-color: rgb(12, 51, 111);
+  color:aliceblue;
+}
+
+* {
+    
     rotate: 0deg;
     animation-name: bodyanimation;
     animation-duration: 1s;
 }
 
 @keyframes bodyanimation {
- 0% {transform: rotateY(0deg);}
- 100% {transform: rotateY(1080deg);}
+  0% {transform: rotate3d(random(0,2), random(0,2), random(0,2), 0deg);} 
+  100% {transform: rotate3d(1, 1, 1, 720deg);}
 }
 
 

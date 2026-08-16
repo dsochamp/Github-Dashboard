@@ -124,20 +124,18 @@
 
                 // Commits Sorting
 
-                let allcommits = `<ul>`;
+                const allcommits = [];
 
                 for (let i = 0; i < commits.length; i++) {
-                    allcommits += `<li>${commits[i].commit.author.name} - ${commits[i].commit.message}</li>`;
+                    allcommits.push(`<li><strong>${commits[i].commit.author.name}</strong> - ${commits[i].commit.message}</li>`);
                 }
-
-                allcommits += `</ul>`;
 
                 // Events Sorting
 
                 let allevents = ``;
 
                 for (let i = 0; i < events.length; i++) {
-                    allevents += ` - A ${events[i].type} was issued by ${events[i].actor.login} around ${timeDiff(events[i].created_at)}`;
+                    allevents += ` - A <strong>${events[i].type}</strong> was issued by <i>${events[i].actor.login}</i> around ${timeDiff(events[i].created_at)}\n`;
                 }
 
 
@@ -169,29 +167,48 @@
                 <div style='display:grid; grid-template-columns: 2fr 1fr; column-gap:35px;'>
                     <div style='display:grid; grid-template-columns:1fr 1fr; column-gap:35px;' class='containerdiv'>
                         <div>
-                            <h3>Repository Details</h3>    
-                            <div style='display:grid; grid-template-columns:1fr 1fr; column-gap:15px;'>
-                                <div style='display:grid; grid-template-columns:1fr;'>
-                                    <div id='chartContainer'></div>
-                                </div>
+                            <h2>Repository Details</h2>    
+                            <div style='display:grid; grid-template-columns:300px 3px 300px; column-gap:15px;'>
                                 <div>
-                                    
+                                    <p><strong>License:</strong> ${repos[index].license?.spdx_id || 'No License Identifier'}</p>
+                                    <p><strong>Size:</strong> ${repos[index].size > 1000 ? `${repos[index.size / 1000]} MB` : `${repos[index].size} KB` } </p>
+                                    <p><strong>Default Branch:</strong> ${repos[index].default_branch}</p>
+                                    <p><strong>Repository Archived:</strong> ${repos[index].archived ? 'Archived' : 'Not Archived'}</p>
+                                    <p><strong>Open Issues Count:</strong> ${repos[index].open_issues_count}</p>
+                                    <p><strong>Disabled:</strong> ${repos[index].disabled ? 'Yes' : 'No'}</p>
+                                    <p><strong>Disabled:</strong> ${repos[index].disabled ? 'Yes' : 'No'}</p>
+                                </div>
+                                <div style='background-color:white; border-radius:1.5px; corner-shape:squircle;'></div>
+                                <div>
+                                    <p><strong>Has Github Pages: </strong> ${repos[index].has_pages ? 'Has Github Pages' : 'No Pages'}</p>
+                                    <p><strong>Has Downloads: </strong> ${repos[index].has_downloads ? 'Has Downloads' : 'Downloads Not Available'}</p>
+                                    <p><strong>Has Downloads: </strong> ${repos[index].has_wiki ? 'Has Wiki' : 'No Wiki'}</p>
+                                    <p><strong>Forking Allowed: </strong> ${repos[index].allow_forking ? 'Yes' : 'No'}</p>
+                                    <p><strong>Has Pull Requests: </strong> ${repos[index].has_pull_requests ? 'Yes' : 'No'}</p>
+                                    <p><strong>Has Discussions: </strong> ${repos[index].has_discussions ? 'Yes' : 'No'}</p>
+                                    <p style='color:whitesmoke;'><strong>Link to Repository: </strong><a href='${repos[index].html_url}'>${repos[index].html_url}</a></p>
                                 </div>
                             </div>
                         </div>
                         <div></div>
                     </div>
                     <div class='containerdiv' style='display:grid;>
-                        <div class='containerdiv'>
+                        <div class='containerdiv' style='overflow:scroll;'>
                             <h3>Recent Activity:</h3>
                             <p>${allevents || 'There is no activity for this repository'}</p>
                         </div>
                     </div>
                 </div><br><br>
-                <div style='display:grid; grid-template-columns:1fr 1fr;'>
-                    <div class='containerdiv'>
+                <div style='display:grid; grid-template-columns:1fr 1fr; column-gap:35px;'>
+                    <div class='containerdiv' style='display:flex; overflow: scroll; height:300px; padding:15px;'>
                         <h3>Recent Commits:</h3>
-                        <p style='display:grid; grid-template-columns:1fr 1fr;'><ul>${allcommits || 'No Commits have been done to this repository yet'}</ul></p>
+                        <div id='commitsdiv'>
+                        <p id='commitlist'><ul>${allcommits.join(' ') || 'No Commits have been done to this repository yet'}</ul></p>
+                        <br>
+                        </div>
+                    </div>
+                    <div style='display:grid; grid-template-columns:1fr;'>
+                        <div id='chartContainer'></div>
                     </div>
                 </div>
                 `;
